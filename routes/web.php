@@ -20,8 +20,7 @@ Route::get('/', function () {
 
 // Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\OrderController::class, 'index'])->name('home');
-Route::get('/dishes', 'DishesController@index')->name('kitchen#dishes');
+Route::resource('dishes',DishesController::class);
 
 Auth::routes([
     'register' => false, // Registration Routes...

@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Dish;
+use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Requests\DishCreateRequest;
 
 class DishesController extends Controller
 {
@@ -14,9 +16,9 @@ class DishesController extends Controller
      */
     public function index()
     {
-        // $dishesData = Dish::all();
-        return view('kitchen.dish');
-        // return view('kitchen.dish')->with(['dishes'=>$dishesData]);
+        $dishesData = Dish::all();
+        // return view('kitchen.dish');
+        return view('kitchen.dish')->with(['dishes'=>$dishesData]);
     }
 
     /**
@@ -26,7 +28,8 @@ class DishesController extends Controller
      */
     public function create()
     {
-        //
+        $categories = Category::all();
+        return view('kitchen.dishCreate')->with(['categories' => $categories]);
     }
 
     /**
@@ -35,9 +38,18 @@ class DishesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DishCreateRequest $request)
     {
-        //
+        $dish = new Dish();
+        $dish->name = $request->name;
+        $dish->category_id = $request->category;
+
+        $imageName = date('YmdHis').".".request()->dish_image->getClientOriginalExtension();
+        request()->dish_image->move(public_path('images'),$imageName);
+        $dish->image = $imageName;
+        $dish->save();
+        return redirect('dishes')->with(['dishCreated'=>'Successfully Created. . . .']);
+
     }
 
     /**
@@ -53,13 +65,13 @@ class DishesController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
+     *  
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit( Dish $dish)
     {
-        //
+        dd($dish);
     }
 
     /**

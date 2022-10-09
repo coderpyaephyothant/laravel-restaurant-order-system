@@ -1,64 +1,65 @@
 @extends('layouts.adminlayout')
 @section('content')
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    <!-- Main content -->
+    <div class="content">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                    <div class="" ><h3 class="card-title mt-1" style="margin-right: 5px;">Dishes </h3></div>
+                    <div class="mt-0">
+                        <a href="dishes/create" class="">
+                            <button class="btn btn-sm btn-primary ">Create Dish</button>
+                        </a>
+                    </div>
 
- <!-- Content Wrapper. Contains page content -->
- <div class="content-wrapper">
-    <!-- Content Header (Page header) -->
-    <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-lg-12">
-            <h1 class="m-0 mb-3">Kitchen Admin</h1>
-            <div class="card">
-                <div class="card-header">
-                <h3 class="card-title">DataTable with default features</h3>
-                </div>
-
-                <div class="card-body">
-                    <table id="dishes" class="table table-bordered table-striped">
-                        <thead>
-                        <tr>
-                        <th>Rendering engine</th>
-                        <th>Browser</th>
-                        <th>Platform(s)</th>
-                        <th>Engine version</th>
-                        <th>CSS grade</th>
-                        </tr>
-                        </thead>
-
-                        </table>
+                    </div>
+                    <div class="card-body">
+                        @if (session('dishCreated'))
+                            <div class="alert alert-success">
+                                {{ session('dishCreated') }}
+                            </div>
+                        @endif
+                        <table id="dishes" class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                            <th>Dish Name</th>
+                            <th>Category</th>
+                            <th>Created at</th>
+                            <th>Updated at</th>
+                            <th>Action</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($dishes as $item)
+                                <tr>
+                                    <td>{{$item->name}}</td>
+                                    <td>{{$item->category->name}}</td>
+                                    <td>{{date('d-m-Y', strtotime($item->created_at))}}</td>
+                                    <td>{{date('d-m-Y', strtotime($item->updated_at))}}</td>
+                                    <td>
+                                        <a class="btn btn-sm btn-info" href="dishes/{{$item->id}}/edit">Edit</a>
+                                        <a class="btn btn-sm btn-warming" href="dishes/{{$item->id}}">Delete</a>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            </table>
+                    </div>
                 </div>
             </div>
-
-          </div><!-- /.col -->
-
-
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+          </div>
+        </div>
     </div>
-    <!-- /.content-header -->
-
-
-
-
-  </div>
-  <!-- /.content-wrapper -->
+</div>
+<!-- /.content-wrapper -->
     @endsection
-    <script>
-        $(function () {
-          $("#dishes").DataTable({
-            "responsive": true, "lengthChange": false, "autoWidth": false,
-            "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-          }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-          $('#example2').DataTable({
-            "paging": true,
-            "lengthChange": false,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false,
-            "responsive": true,
-          });
-        });
-      </script>
+
+
+
+
+
 
