@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Dish;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\File;
 use App\Http\Requests\DishCreateRequest;
 
 class DishesController extends Controller
@@ -41,10 +42,11 @@ class DishesController extends Controller
     public function store(DishCreateRequest $request)
     {
         $dish = new Dish();
+        // dd($dish);
         $dish->name = $request->name;
         $dish->category_id = $request->category;
 
-        $imageName = date('YmdHis').".".request()->dish_image->getClientOriginalExtension();
+        $imageName = date('YmdHis')."."."developerpyaephyothant".request()->dish_image->getClientOriginalExtension();
         request()->dish_image->move(public_path('images'),$imageName);
         $dish->image = $imageName;
         $dish->save();
@@ -65,13 +67,17 @@ class DishesController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *  
+     *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit( Dish $dish)
+    public function edit( Dish $dish)  //Route Model Binding
     {
-        dd($dish);
+        // dd($dish);
+        // dd($dish->image);
+
+        $categories = Category::all();
+        return view('kitchen.dishEdit')->with(['dishes'=>$dish, 'categories'=>$categories]);
     }
 
     /**
@@ -81,9 +87,33 @@ class DishesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
-    {
-        //
+    public function update(Request $request, Dish $dish){
+        // dd($request->all());
+        //customize validation for name and category
+            $request->validate([
+                'name' => 'required',
+                'category' => 'required',
+            ]);
+
+            $dish->name = $request->name;
+            $dish->category_id = $request->category;
+            if($request->dish_image){
+                $oldImg = $dish->image;
+                // dd($oldImg);
+                if(File::exists(public_path().'/images/'.$oldImg)){
+                    File::delete(public_path().'/images/'.$oldImg);
+                }
+                $uniqueId = uniqid();
+                // dd($uniqueId);
+                $imageName = $uniqueId."."."developerppt".".".request()->dish_image->getClientOriginalExtension();
+                // dd($imageName);
+                request()->dish_image->move(public_path('images'),$imageName);
+                $dish->image = $imageName;
+            };
+                $dish->save();
+                return redirect('dishes')->with(['dishCreated'=>'Successfully Updatd. . . .']);
+
+
     }
 
     /**
@@ -92,8 +122,10 @@ class DishesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Dish $dish)
     {
-        //
+        $dish->delete();
+        return redirect('dishes')->with(['dishCreated'=>'Successfully Deleted. . . .']);
+
     }
 }

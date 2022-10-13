@@ -7,11 +7,11 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-lg-12">
-                <div class="card">
+                <div class="card mt-3">
                     <div class="card-header">
-                    <div class="" ><h3 class="card-title mt-1" style="margin-right: 5px;">Dishes </h3></div>
-                    <div class="mt-0">
-                        <a href="dishes/create" class="">
+                    <div class="" ><h3 class="card-title mt-1" style="">Dishes </h3></div>
+                    <div class="mt-0 ms-2" style="float:right">
+                        <a href="{{route('dishes.create')}}" class="">
                             <button class="btn btn-sm btn-primary ">Create Dish</button>
                         </a>
                     </div>
@@ -41,8 +41,14 @@
                                     <td>{{date('d-m-Y', strtotime($item->created_at))}}</td>
                                     <td>{{date('d-m-Y', strtotime($item->updated_at))}}</td>
                                     <td>
-                                        <a class="btn btn-sm btn-info" href="dishes/{{$item->id}}/edit">Edit</a>
-                                        <a class="btn btn-sm btn-warming" href="dishes/{{$item->id}}">Delete</a>
+                                        <div class="d-flex align-items-center justify-content-around ">
+                                            <a class="btn btn-sm btn-info " href="{{route('dishes.edit',$item->id)}}">View & Edit</a>
+                                            <form action="{{route('dishes.destroy',$item->id)}}" method="post">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" onclick="return confirm('Are you sure you want to delete this item?');" class="btn btn-sm btn-secondary ">Delete</button>
+                                            </form>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -56,7 +62,9 @@
     </div>
 </div>
 <!-- /.content-wrapper -->
+
     @endsection
+
 
 
 

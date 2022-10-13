@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\DishesController;
 
 /*
@@ -14,9 +15,11 @@ use App\Http\Controllers\DishesController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () { return view('welcome');
+// });
+
+Route::get('/',[ OrderController::class, 'index'])->name('order#form');
+Route::post('/order_submit',[ OrderController::class, 'orderSubmit'])->name('order#submit');
 
 // Auth::routes();
 
